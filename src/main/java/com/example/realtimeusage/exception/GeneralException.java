@@ -9,27 +9,27 @@ public class GeneralException extends RuntimeException {
 
     public GeneralException() {
         super();
-        this.errorCode = ErrorCode.INTERVAL_ERROR;
+        this.errorCode = ErrorCode.INTERNAL_ERROR;
     }
 
     public GeneralException(String message) {
         super(message);
-        this.errorCode = ErrorCode.INTERVAL_ERROR;
+        this.errorCode = ErrorCode.INTERNAL_ERROR;
     }
 
     public GeneralException(String message, Throwable cause) {
         super(message, cause);
-        this.errorCode = ErrorCode.INTERVAL_ERROR;
+        this.errorCode = ErrorCode.INTERNAL_ERROR;
     }
 
     public GeneralException(Throwable cause) {
         super(cause);
-        this.errorCode = ErrorCode.INTERVAL_ERROR;
+        this.errorCode = ErrorCode.INTERNAL_ERROR;
     }
 
     public GeneralException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
-        this.errorCode = ErrorCode.INTERVAL_ERROR;
+        this.errorCode = ErrorCode.INTERNAL_ERROR;
     }
 
     public GeneralException(ErrorCode errorCode) {
@@ -45,7 +45,7 @@ public class GeneralException extends RuntimeException {
     public GeneralException(ErrorCode errorCode, String message, Throwable cause, boolean enableSuppression,
                             boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
-        this.errorCode = ErrorCode.INTERVAL_ERROR;
+        this.errorCode = ErrorCode.INTERNAL_ERROR;
     }
 
 }
