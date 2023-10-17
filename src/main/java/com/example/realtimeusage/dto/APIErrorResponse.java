@@ -14,19 +14,19 @@ public class APIErrorResponse {
     private final Integer errorCode;
     private final String message;
 
-    public static APIErrorResponse of(Boolean success, Integer errorCode, String message) {
-        return new APIErrorResponse(success, errorCode, message);
+    public static APIErrorResponse of(Integer errorCode, String message) {
+        return new APIErrorResponse(false, errorCode, message);
     }
 
-    public static APIErrorResponse of(Boolean success, ErrorCode errorCode) {
-        return new APIErrorResponse(success, errorCode.getCode(), errorCode.getMessage());
+    public static APIErrorResponse of(ErrorCode errorCode) {
+        return new APIErrorResponse(false, errorCode.getCode(), errorCode.getMessage());
     }
 
-    public static APIErrorResponse of(Boolean success, ErrorCode errorCode, Exception e) {
-        return new APIErrorResponse(success, errorCode.getCode(), errorCode.getMessage(e));
+    public static APIErrorResponse of(ErrorCode errorCode, Exception e) {
+        return new APIErrorResponse(false, errorCode.getCode(), errorCode.getMessage(e));
     }
 
-    public static APIErrorResponse of(Boolean success, ErrorCode errorCode, String message) {
-        return new APIErrorResponse(success, errorCode.getCode(), errorCode.getMessage(message));
+    public static APIErrorResponse of(ErrorCode errorCode, String message) {
+        return new APIErrorResponse(false, errorCode.getCode(), errorCode.getMessage(message));
     }
 }

@@ -17,8 +17,4 @@ public class APIDataResponse extends APIErrorResponse {
     public static APIDataResponse of(Object data) {
         return new APIDataResponse(true, ErrorCode.OK.getCode(), ErrorCode.OK.getMessage(), data);
     }
-
-    public static APIDataResponse of(Integer errorCode, String message) {
-        return new APIDataResponse(false, errorCode, message, null);
-    }
 }
