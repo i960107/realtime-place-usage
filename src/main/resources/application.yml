@@ -1,0 +1,4 @@
+spring.output.ansi.enabled: always
+server.error.whitelabel.enabled: false
+debug: true
+management.endpoints.web.exposure.include: "*"
