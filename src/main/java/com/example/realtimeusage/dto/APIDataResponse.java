@@ -6,15 +6,19 @@ import lombok.ToString;
 
 @Getter
 @ToString
-public class APIDataResponse extends APIErrorResponse {
+public class APIDataResponse<T> extends APIErrorResponse {
     private final Object data;
 
-    private APIDataResponse(Boolean success, Integer errorCode, String message, Object data) {
-        super(success, errorCode, message);
+    private APIDataResponse(Object data) {
+        super(true, ErrorCode.OK.getCode(), ErrorCode.OK.getMessage());
         this.data = data;
     }
 
-    public static APIDataResponse of(Object data) {
-        return new APIDataResponse(true, ErrorCode.OK.getCode(), ErrorCode.OK.getMessage(), data);
+    public static <T> APIDataResponse<T> of(Object data) {
+        return new APIDataResponse<>(data);
+    }
+
+    public static <T> APIDataResponse<T> empty() {
+        return new APIDataResponse<>(null);
     }
 }
