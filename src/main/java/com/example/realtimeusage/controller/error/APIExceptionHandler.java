@@ -4,9 +4,12 @@ import com.example.realtimeusage.constant.ErrorCode;
 import com.example.realtimeusage.dto.APIErrorResponse;
 import com.example.realtimeusage.exception.GeneralException;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.ConstraintViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -17,7 +20,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 public class APIExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(GeneralException.class)
-    public ResponseEntity<Object> error(GeneralException e, HttpServletResponse response, WebRequest request) {
+    public ResponseEntity<Object> error(GeneralException e,  WebRequest request) {
         ErrorCode errorCode = e.getErrorCode();
         HttpStatus status = errorCode.isClientSideError() ? HttpStatus.BAD_REQUEST : HttpStatus.INTERNAL_SERVER_ERROR;
 
@@ -51,6 +54,17 @@ public class APIExceptionHandler extends ResponseEntityExceptionHandler {
                         ErrorCode.SPRING_INTERNAL_ERROR;
         return super.handleExceptionInternal(ex,
                 APIErrorResponse.of(errorCode.getCode(), errorCode.getMessage(ex.getMessage())), headers, status,
+                request);
+    }
+
+    @ExceptionHandler({ConstraintViolationException.class})
+    public ResponseEntity<Object> validationError(Exception ex, WebRequest request) {
+        ErrorCode errorCode = ErrorCode.VALIDATION_ERROR;
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        return super.handleExceptionInternal(ex,
+                APIErrorResponse.of(errorCode, errorCode.getMessage(ex)),
+                HttpHeaders.EMPTY,
+                status,
                 request);
     }
 }
