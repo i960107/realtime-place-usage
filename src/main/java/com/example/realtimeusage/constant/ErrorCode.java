@@ -17,7 +17,8 @@ public enum ErrorCode {
     VALIDATION_ERROR(10002, ErrorCategory.CLIENT_SIDE, "validation failed"),
 
     INTERNAL_ERROR(20000, ErrorCategory.SERVER_SIDE, "internal error"),
-    SPRING_INTERNAL_ERROR(20001, ErrorCategory.SERVER_SIDE, "Spring-detected internal error");
+    SPRING_INTERNAL_ERROR(20001, ErrorCategory.SERVER_SIDE, "Spring-detected internal error"),
+    DATA_ACCESS_ERROR(20002, ErrorCategory.SERVER_SIDE, "data access error");
 
     private final Integer code;
     private final ErrorCategory errorCategory;
@@ -52,7 +53,7 @@ public enum ErrorCode {
 
     @Override
     public String toString() {
-        return String.format("%s (%d)", name(), this.getCode());
+        return String.format("%s (%d) : %s", name(), this.getCode(), this.getMessage());
     }
 
     public enum ErrorCategory {

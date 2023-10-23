@@ -1,7 +1,9 @@
 package com.example.realtimeusage.service;
 
+import com.example.realtimeusage.constant.ErrorCode;
 import com.example.realtimeusage.constant.EventStatus;
 import com.example.realtimeusage.dto.EventDto;
+import com.example.realtimeusage.exception.GeneralException;
 import com.example.realtimeusage.repository.EventRepository;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -21,7 +23,11 @@ public class EventService {
             LocalDateTime startDateTime,
             LocalDateTime endDateTime
     ) {
-        return eventRepository.findBy(placeId, name, eventStatus, startDateTime, endDateTime);
+        try {
+            return eventRepository.findBy(placeId, name, eventStatus, startDateTime, endDateTime);
+        }catch (Exception e){
+            throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
+        }
     }
 
     public Optional<EventDto> getEvent(long eventId) {
