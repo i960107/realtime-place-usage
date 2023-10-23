@@ -2,8 +2,10 @@ package com.example.realtimeusage.constant;
 
 import java.util.Optional;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.validation.BindingResult;
 
 @Getter
 @RequiredArgsConstructor
@@ -12,6 +14,7 @@ public enum ErrorCode {
 
     BAD_REQUEST(10000, ErrorCategory.CLIENT_SIDE, "bad request"),
     SPRING_BAD_REQUEST(10001, ErrorCategory.CLIENT_SIDE, "Spring-detected bad request"),
+    VALIDATION_ERROR(10002, ErrorCategory.CLIENT_SIDE, "validation failed"),
 
     INTERNAL_ERROR(20000, ErrorCategory.SERVER_SIDE, "internal error"),
     SPRING_INTERNAL_ERROR(20001, ErrorCategory.SERVER_SIDE, "Spring-detected internal error");
@@ -21,7 +24,7 @@ public enum ErrorCode {
     private final String message;
 
     public String getMessage(Exception e) {
-        return getMessage(e.getMessage());
+        return getMessage(this.getMessage() + " - " + e.getMessage());
     }
 
     public String getMessage(String message) {
@@ -29,6 +32,14 @@ public enum ErrorCode {
                 .filter(Predicate.not(String::isBlank))
                 .orElse(getMessage());
     }
+
+    public String getMessage(BindingResult bindingResult) {
+        return bindingResult.getFieldErrors()
+                .stream()
+                .map(error -> error.getField() + " : " + error.getDefaultMessage())
+                .collect(Collectors.joining());
+    }
+
 
     public boolean isClientSideError() {
 //        return this.getErrorCategory() == ErrorCategory.CLIENT_SIDE;
