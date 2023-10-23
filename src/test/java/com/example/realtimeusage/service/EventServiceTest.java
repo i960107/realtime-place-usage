@@ -1,15 +1,20 @@
 package com.example.realtimeusage.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 
+import com.example.realtimeusage.constant.ErrorCode;
 import com.example.realtimeusage.constant.EventStatus;
 import com.example.realtimeusage.dto.EventDto;
+import com.example.realtimeusage.exception.GeneralException;
 import com.example.realtimeusage.repository.EventRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import org.hibernate.TransactionException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -64,48 +69,25 @@ class EventServiceTest {
         then(eventRepository).should().findBy(null, null, null, null, null);
     }
 
-    @DisplayName("검색 조건으로 이벤트 검색하면 조건에 맞는 이벤트 리스트를 반환한다.")
+
+    @DisplayName("이벤트를 검색하는데 에러가 발생한 경우, 프로젝트 일반 에러로 전환하여 예외 던진다.")
     @Test
-    void requestEventsWithParametersShouldReturnEventList() {
+    void errorWhileGettingEventsShouldBeConvertedToGeneralExceptionAndBeThrown() {
         //given
-        Long placeId = 1L;
-        String name = "오전 운동";
-        EventStatus status = EventStatus.OPENED;
-        LocalDateTime startDateTime = LocalDateTime.of(2021, 1, 1, 0, 0);
-        LocalDateTime endDateTime = LocalDateTime.of(2021, 1, 2, 0, 0);
-
-        given(eventRepository.findBy(placeId, name, status, startDateTime, endDateTime))
-                .willReturn(List.of(
-                        EventDto.of(
-                                1L,
-                                1L,
-                                "오전 운동",
-                                LocalDateTime.of(2021, 1, 1, 13, 0),
-                                LocalDateTime.of(2021, 1, 1, 16, 0),
-                                30,
-                                0,
-                                EventStatus.OPENED,
-                                "",
-                                null,
-                                null)
-                ));
+        String message= "This is test.";
+        RuntimeException e = new RuntimeException(message);
+        given(eventRepository.findBy(any(), any(), any(), any(), any()))
+                .willThrow(e);
         //when
-        List<EventDto> list = sut.getEvents(placeId, name, status, startDateTime, endDateTime);
-        //then
-        assertThat(list)
-                .hasSize(1)
-                .allSatisfy(event -> {
-                    assertThat(event)
-                            .hasFieldOrPropertyWithValue("placeId", placeId)
-                            .hasFieldOrPropertyWithValue("name", name)
-                            .hasFieldOrPropertyWithValue("status", status);
-                    assertThat(event.startDateTime())
-                            .isAfterOrEqualTo(startDateTime);
-                    assertThat(event.endDateTime())
-                            .isBeforeOrEqualTo(endDateTime);
-                });
+        Throwable throwable = catchThrowable(() ->
+                sut.getEvents(null, null, null, null, null) );
 
-        then(eventRepository).should().findBy(placeId, name, status, startDateTime, endDateTime);
+        //then
+        assertThat(throwable)
+                .isInstanceOf(GeneralException.class)
+                .hasMessageContaining(ErrorCode.DATA_ACCESS_ERROR.getMessage())
+                .hasFieldOrPropertyWithValue("errorCode", ErrorCode.DATA_ACCESS_ERROR);
+        then(eventRepository).should().findBy(any(), any(), any(), any(), any());
     }
 
     @DisplayName("eventID로 존재하는 이벤트를 조회하면, 해당 이벤트 정보를 보여준다.")

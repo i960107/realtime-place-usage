@@ -2,12 +2,14 @@ package com.example.realtimeusage.dto;
 
 import com.example.realtimeusage.constant.ErrorCode;
 import lombok.AccessLevel;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 
 @Getter
 @ToString
+@EqualsAndHashCode
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED) // 인스턴스 만들 수 있는 곳 -> dto 패키지 내부 혹은 상속받은 곳
 public class APIErrorResponse {
     private final Boolean success;
