@@ -1,0 +1,17 @@
+<?xml version="1.0" ?>
+<thlogic>
+    <attr sel="#eventsTitle" th:text="'이벤트 목록'"/>
+    <attr sel="#eventsTable">
+        <attr sel="tbody" th:remove="all-but-first">
+            <attr sel="tr[0]" th:each="event : ${events}">
+                <attr sel="td.placeId" th:text="${event.placeId}"/>
+                <attr sel="td.name" th:text="${event.placeId}"/>
+                <attr sel="td.startDateTime" th:text="${event.placeId}"/>
+                <attr sel="td.endDateTime" th:text="${event.placeId}"/>
+                <attr sel="td.status" th:text="${event.placeId}"/>
+                <attr sel="td.usage" th:text="${event.currentNumberOfPeople} +'/' +${event.capacity}"/>
+                <attr sel="td/a" th:text="상세" th:href="@{'/events/' + ${eventId}}"/>
+            </attr>
+        </attr>
+    </attr>
+</thlogic>
