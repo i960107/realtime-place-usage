@@ -5,8 +5,8 @@ management.endpoints.web.exposure.include: "*"
 debug: false
 logging:
   level:
-    com.example.realtimeusage: debug
     org.springframework.web.servlet: debug
+    com.example.realtimeusage: debug
     org.hibernate.type.descriptor.sql.BasicBinder: trace
 spring:
   profiles:
