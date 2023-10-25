@@ -1,4 +1,10 @@
+application:
+  title: realtime-usage-service
 spring.output.ansi.enabled: always
 server.error.whitelabel.enabled: false
-debug: true
 management.endpoints.web.exposure.include: "*"
+debug: true
+#debug: false
+#logging.level.com.example.realtimeusage: debug
+spring.thymeleaf.cache: false
+spring.thymeleaf3.decoupled-logic: true

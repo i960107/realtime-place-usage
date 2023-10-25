@@ -2,50 +2,36 @@ package com.example.realtimeusage.exception;
 
 import com.example.realtimeusage.constant.ErrorCode;
 import lombok.Getter;
+import lombok.ToString;
 
 @Getter
 public class GeneralException extends RuntimeException {
     private final ErrorCode errorCode;
 
     public GeneralException() {
-        super();
+        super(ErrorCode.INTERNAL_ERROR.getMessage());
         this.errorCode = ErrorCode.INTERNAL_ERROR;
     }
 
     public GeneralException(String message) {
-        super(message);
+        super(ErrorCode.INTERNAL_ERROR.getMessage(message));
         this.errorCode = ErrorCode.INTERNAL_ERROR;
     }
 
     public GeneralException(String message, Throwable cause) {
-        super(message, cause);
+        super(ErrorCode.INTERNAL_ERROR.getMessage(message), cause);
         this.errorCode = ErrorCode.INTERNAL_ERROR;
     }
 
     public GeneralException(Throwable cause) {
-        super(cause);
+        super(ErrorCode.INTERNAL_ERROR.getMessage(cause));
         this.errorCode = ErrorCode.INTERNAL_ERROR;
-    }
 
-    public GeneralException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
-        this.errorCode = ErrorCode.INTERNAL_ERROR;
-    }
-
-    public GeneralException(ErrorCode errorCode) {
-        super(errorCode.getMessage());
-        this.errorCode = errorCode;
     }
 
     public GeneralException(ErrorCode errorCode, Throwable cause) {
-        super(cause);
+        super(errorCode.getMessage(cause), cause);
         this.errorCode = errorCode;
-    }
-
-    public GeneralException(ErrorCode errorCode, String message, Throwable cause, boolean enableSuppression,
-                            boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
-        this.errorCode = ErrorCode.INTERNAL_ERROR;
     }
 
 }
