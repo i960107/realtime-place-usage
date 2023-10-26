@@ -1,55 +1,29 @@
 package com.example.realtimeusage.repository;
 
-import com.example.realtimeusage.constant.EventStatus;
-import com.example.realtimeusage.dto.EventDto;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
+import com.example.realtimeusage.domain.Event;
+import com.example.realtimeusage.domain.QEvent;
+import com.querydsl.core.types.dsl.ComparableExpression;
+import com.querydsl.core.types.dsl.SimpleExpression;
+import com.querydsl.core.types.dsl.StringExpression;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
+import org.springframework.data.querydsl.binding.QuerydslBinderCustomizer;
+import org.springframework.data.querydsl.binding.QuerydslBindings;
+import org.springframework.stereotype.Repository;
 
-// TODO: 2023/10/18 default 함수를 정의해서 bean으로 등록시 익명 클래스 구현 필요 없도록.
-public interface EventRepository {
-    default List<EventDto> findBy(
-            Long placeId,
-            String name,
-            EventStatus eventStatus,
-            LocalDateTime startDateTime,
-            LocalDateTime endDateTime
-    ) {
-        return null;
-    }
+@Repository
+public interface EventRepository extends
+        JpaRepository<Event, Long>,
+        QuerydslPredicateExecutor<Event>,
+        QuerydslBinderCustomizer<QEvent> {
 
-
-    default Optional<EventDto> findEventById(long eventId) {
-        return Optional.empty();
-    }
-
-    ;
-//    public Optional<EventDto> findEventById(long eventId) {
-//        if (eventId != 1L) {
-//            return Optional.empty();
-//        }
-//        return Optional.of(EventDto.of(
-//                1L,
-//                1L,
-//                "오전 운동",
-//                LocalDateTime.of(2021, 1, 1, 9, 0),
-//                LocalDateTime.of(2021, 1, 1, 12, 0),
-//                30,
-//                20,
-//                EventStatus.OPENED,
-//                ""
-//        ));
-//    }
-
-    default boolean create(EventDto eventDto) {
-        return true;
-    }
-
-    default boolean update(long eventId, EventDto eventDto) {
-        return true;
-    }
-
-    default boolean delete(long eventId) {
-        return true;
+    @Override
+    default void customize(QuerydslBindings bindings, QEvent root) {
+        bindings.excludeUnlistedProperties(true);
+        bindings.including(root.place.id, root.name, root.status, root.startDateTime, root.endDateTime);
+        bindings.bind(root.place.id).as("placeId").first(SimpleExpression::eq);
+        bindings.bind(root.name).as("name").first(StringExpression::containsIgnoreCase);
+        bindings.bind(root.startDateTime).first(ComparableExpression::goe);
+        bindings.bind(root.endDateTime).first(ComparableExpression::loe);
     }
 }
