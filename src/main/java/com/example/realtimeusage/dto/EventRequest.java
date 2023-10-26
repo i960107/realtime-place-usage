@@ -39,7 +39,7 @@ public record EventRequest(
     public EventDto toDto(PlaceDto placeDto) {
         return EventDto.of(
                 null,
-                placeDto.id(),
+                placeDto != null ? placeDto.id() : null,
                 name,
                 startDateTime,
                 endDateTime,
