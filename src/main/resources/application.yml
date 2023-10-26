@@ -1,10 +1,43 @@
 application:
   title: realtime-usage-service
-spring.output.ansi.enabled: always
 server.error.whitelabel.enabled: false
 management.endpoints.web.exposure.include: "*"
-debug: true
-#debug: false
-#logging.level.com.example.realtimeusage: debug
-spring.thymeleaf.cache: false
-spring.thymeleaf3.decoupled-logic: true
+debug: false
+logging:
+  level:
+    com.example.realtimeusage: debug
+    org.springframework.web.servlet: debug
+    org.hibernate.type.descriptor.sql.BasicBinder: trace
+spring:
+  profiles:
+    active: local
+  output.ansi.enabled: always
+  thymeleaf.cache: false
+  thymeleaf3.decoupled-logic: true
+
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+  jpa:
+    defer-datasource-intiailization: true
+    hibernate:
+      ddl-auto: none
+      show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+  datasource:
+    url: jdbc:mysql://localhost:3306/realtime_usage
+    username: rt
+    password: realtime
+  sql:
+    init:
+      mode: always
+  data:
+    rest:
+      base-path: /api
+
+
+
