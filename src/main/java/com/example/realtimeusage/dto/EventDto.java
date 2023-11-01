@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public record EventDto(
         Long id,
-        Long placeId,
+        PlaceDto placeDto,
         String name,
         LocalDateTime startDateTime,
         LocalDateTime endDateTime,
@@ -21,7 +21,7 @@ public record EventDto(
 ) {
     public static EventDto of(
             Long id,
-            Long placeId,
+            PlaceDto placeDto,
             String name,
             LocalDateTime startDateTime,
             LocalDateTime endDateTime,
@@ -32,14 +32,24 @@ public record EventDto(
             LocalDateTime createdAt,
             LocalDateTime updatedAt
     ) {
-        return new EventDto(id, placeId, name, startDateTime,
-                endDateTime, capacity, currentNumberOfPeople, status, memo, createdAt, updatedAt);
+        return new EventDto(
+                id,
+                placeDto,
+                name,
+                startDateTime,
+                endDateTime,
+                capacity,
+                currentNumberOfPeople,
+                status,
+                memo,
+                createdAt,
+                updatedAt);
     }
 
     public static EventDto of(Event event) {
         return new EventDto(
                 event.getId(),
-                event.getPlace().getId(),
+                PlaceDto.of(event.getPlace()),
                 event.getName(),
                 event.getStartDateTime(),
                 event.getEndDateTime(),
@@ -63,5 +73,9 @@ public record EventDto(
                 .status(status)
                 .memo(memo)
                 .build();
+    }
+
+    public Long getPlaceId(){
+        return placeDto.id();
     }
 }

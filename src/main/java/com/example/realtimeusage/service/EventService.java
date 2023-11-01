@@ -2,6 +2,7 @@ package com.example.realtimeusage.service;
 
 import com.example.realtimeusage.constant.ErrorCode;
 import com.example.realtimeusage.constant.EventStatus;
+import com.example.realtimeusage.domain.Event;
 import com.example.realtimeusage.domain.Place;
 import com.example.realtimeusage.dto.EventDto;
 import com.example.realtimeusage.exception.GeneralException;
@@ -11,7 +12,6 @@ import com.querydsl.core.types.Predicate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -29,7 +29,7 @@ public class EventService {
         try {
             return StreamSupport.stream(eventRepository.findAll(predicate).spliterator(), false)
                     .map(EventDto::of)
-                    .collect(Collectors.toList());
+                    .toList();
         } catch (Exception exception) {
             throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, exception);
         }
@@ -64,8 +64,9 @@ public class EventService {
             if (eventDto == null) {
                 return false;
             }
-            Place place = placeRepository.findById(eventDto.placeId())
-                    .orElseThrow(GeneralException::new);// error대체 필요..
+            // TODO: 2023/11/01
+            Place place = placeRepository.findById(eventDto.getPlaceId())
+                    .orElseThrow(() -> new GeneralException(ErrorCode.NOT_FOUND));// error대체 필요..
             eventRepository.save(eventDto.toEntity(place));
             return true;
         } catch (Exception e) {
@@ -74,6 +75,7 @@ public class EventService {
     }
 
     public boolean modifyEvent(Long eventId, EventDto eventDto) {
+        // TODO: 2023/11/01 refactoring 할수 없을까?
         try {
             if (eventId == null || eventDto == null) {
                 return false;
@@ -82,30 +84,39 @@ public class EventService {
                 return false;
             }
 
-            if (eventDto.placeId() != null && placeRepository.findById(eventDto.placeId()).isEmpty()) {
+            Optional<Event> optionalEvent = eventRepository.findById(eventId);
+            if (optionalEvent.isEmpty()) {
                 return false;
             }
-            eventRepository.findById(eventId)
-                    .ifPresent(event -> {
-                        event.update(eventDto);
-                        if (eventDto.placeId() != null) {
-                            event.updatePlace(placeRepository.findById(eventDto.placeId()).get());
-                        }
-                    });
+            Event event = optionalEvent.get();
+            event.update(eventDto);
+
+            if (eventDto.getPlaceId() != null) {
+                Optional<Place> place = placeRepository.findById(eventDto.getPlaceId());
+                if (place.isEmpty()) {
+                    return false;
+                }
+                event.updatePlace(place.get());
+            }
+            eventRepository.save(event);
             return true;
-        } catch (Exception e) {
+        } catch (
+                Exception e) {
             throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
         }
     }
 
-    public boolean deleteEvent(Long eventId) {
+    public boolean removeEvent(Long eventId) {
         try {
             if (eventId == null) {
                 return false;
             }
-            eventRepository.findById(eventId)
-                    .ifPresent(event -> event.updateStatus(EventStatus.DELETED));
-            return true;
+            Optional<Event> event = eventRepository.findById(eventId);
+            if (event.isPresent()) {
+                event.get().updateStatus(EventStatus.DELETED);
+                return true;
+            }
+            return false;
         } catch (Exception e) {
             throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
         }

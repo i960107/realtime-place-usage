@@ -15,10 +15,11 @@ public enum ErrorCode {
     BAD_REQUEST(10000, ErrorCategory.CLIENT_SIDE, "bad request"),
     SPRING_BAD_REQUEST(10001, ErrorCategory.CLIENT_SIDE, "Spring-detected bad request"),
     VALIDATION_ERROR(10002, ErrorCategory.CLIENT_SIDE, "validation failed"),
+    NOT_FOUND(10003, ErrorCategory.CLIENT_SIDE, "validation failed"),
 
     INTERNAL_ERROR(20000, ErrorCategory.SERVER_SIDE, "internal error"),
     SPRING_INTERNAL_ERROR(20001, ErrorCategory.SERVER_SIDE, "Spring-detected internal error"),
-    DATA_ACCESS_ERROR(20002, ErrorCategory.SERVER_SIDE, "data access error");
+    DATA_ACCESS_ERROR(20002, ErrorCategory.SERVER_SIDE, "requested resource is not found");
 
     private final Integer code;
     private final ErrorCategory errorCategory;
