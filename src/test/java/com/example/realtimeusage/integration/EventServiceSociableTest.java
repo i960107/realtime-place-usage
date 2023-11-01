@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.example.realtimeusage.dto.EventDto;
 import com.example.realtimeusage.service.EventService;
+import com.querydsl.core.BooleanBuilder;
 import java.util.List;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
@@ -23,7 +24,7 @@ class EventServiceSociableTest {
     void requestEventsWithNoParameterShouldReturnAllEvents() {
         //given
         //when
-        List<EventDto> list = sut.getEvents(null, null, null, null, null);
+        List<EventDto> list = sut.getEvents(new BooleanBuilder());
 
         //then
         assertThat(list).isEmpty();

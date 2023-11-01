@@ -7,6 +7,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.example.realtimeusage.constant.ErrorCode;
 import com.example.realtimeusage.constant.PlaceType;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,9 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+@Deprecated
+@Disabled("API 컨트롤러를 REST Repository 컨트롤러로 대체")
+@DisplayName("API 컨트롤러 - 장소")
 @WebMvcTest(APIPlaceController.class)
 class APIPlaceControllerTest {
     private final MockMvc mockMvc;

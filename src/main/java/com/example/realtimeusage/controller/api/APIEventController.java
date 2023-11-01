@@ -1,9 +1,11 @@
 package com.example.realtimeusage.controller.api;
 
 import com.example.realtimeusage.constant.EventStatus;
+import com.example.realtimeusage.constant.PlaceType;
 import com.example.realtimeusage.dto.APIDataResponse;
 import com.example.realtimeusage.dto.EventRequest;
 import com.example.realtimeusage.dto.EventResponse;
+import com.example.realtimeusage.dto.PlaceDto;
 import com.example.realtimeusage.service.EventService;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -40,12 +42,28 @@ public class APIEventController {
             @DateTimeFormat(iso = ISO.DATE_TIME) LocalDateTime startDateTime,
             @DateTimeFormat(iso = ISO.DATE_TIME) LocalDateTime endDateTime
     ) {
-        return APIDataResponse.of(
-                eventService
-                        .getEvents(null, null, null, null, null)
-                        .stream().map(EventResponse::from)
-                        .toList()
-        );
+        return APIDataResponse.of(List.of(EventResponse.of(
+                1L,
+                PlaceDto.of(
+                        1L,
+                        PlaceType.SPORTS,
+                        "배드민턴장",
+                        "서울시 가나구 다라동",
+                        "010-1111-2222",
+                        0,
+                        null,
+                        true,
+                        LocalDateTime.now(),
+                        LocalDateTime.now()
+                ),
+                "오후 운동",
+                LocalDateTime.of(2021, 1, 1, 13, 0, 0),
+                LocalDateTime.of(2021, 1, 1, 16, 0, 0),
+                0,
+                24,
+                EventStatus.OPENED,
+                "마스크 꼭 착용하세요"
+        )));
     }
 
     @GetMapping("/{eventId}")
@@ -72,7 +90,7 @@ public class APIEventController {
 
     @DeleteMapping("/{eventId}")
     public APIDataResponse<String> deleteEvent(@Positive @PathVariable Long eventId) {
-        boolean result = eventService.deleteEvent(eventId);
+        boolean result = eventService.removeEvent(eventId);
         return APIDataResponse.of(Boolean.toString(result));
     }
 
