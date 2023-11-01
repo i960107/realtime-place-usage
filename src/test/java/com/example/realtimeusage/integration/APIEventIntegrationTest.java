@@ -9,6 +9,7 @@ import com.example.realtimeusage.constant.ErrorCode;
 import com.example.realtimeusage.constant.EventStatus;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 
+@Disabled("spring rest repository로 대체됨.")
 @SpringBootTest
 @AutoConfigureMockMvc
 class APIEventIntegrationTest {

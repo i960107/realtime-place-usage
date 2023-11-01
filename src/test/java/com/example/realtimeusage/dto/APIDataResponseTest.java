@@ -12,12 +12,17 @@ class APIDataResponseTest {
     @Test
     void creatingResponseShouldReturnSuccessfulResponse() {
         //given
-        PlaceDto data = PlaceDto.of(PlaceType.PARTY,
+        PlaceDto data = PlaceDto.of(
+                1L,
+                PlaceType.PARTY,
                 "place",
                 "place address",
                 "0101111111",
                 10,
-                "");
+                "",
+                null,
+                null
+                );
         //when
         APIDataResponse<String> response = APIDataResponse.of(data);
 
