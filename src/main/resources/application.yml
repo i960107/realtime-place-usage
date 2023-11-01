@@ -12,9 +12,8 @@ spring:
   profiles:
     active: local
   output.ansi.enabled: always
-  thymeleaf.cache: false
-  thymeleaf3.decoupled-logic: true
-
+  thymeleaf3.decoupledLogic: true
+  thymeleaf.cache: true
 ---
 spring:
   config:

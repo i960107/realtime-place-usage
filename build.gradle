@@ -24,25 +24,30 @@ project.ext {
 }
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    runtimeOnly 'mysql:mysql-connector-java'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'com.querydsl:querydsl-jpa'
-    implementation 'com.querydsl:querydsl-collections'
-    implementation 'org.springframework.boot:spring-boot-starter-data-rest'
+
     implementation 'org.springframework.data:spring-data-rest-hal-explorer'
+
     implementation 'org.springframework.boot:spring-boot-starter-security'
+
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
-    implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
     compileOnly 'org.projectlombok:lombok'
+
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
-    runtimeOnly 'mysql:mysql-connector-java'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
 
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+    annotationProcessor 'org.projectlombok:lombok'
+    //queyr dsl
+    implementation 'com.querydsl:querydsl-jpa'
+    implementation 'com.querydsl:querydsl-collections'
     annotationProcessor "com.querydsl:querydsl-apt:${project.querydslVersion}:jpa" //querydsl JPAAnnotationProcessor
     annotationProcessor "jakarta.annotation:jakarta.annotation-api" // java.lang.NoClassFoundDefError: javax/annotation/Generated 발생 대응
-    annotationProcessor 'org.projectlombok:lombok'
 
     testRuntimeOnly 'com.h2database:h2'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
