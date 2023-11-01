@@ -65,9 +65,11 @@ public class EventService {
                 return false;
             }
             // TODO: 2023/11/01
-            Place place = placeRepository.findById(eventDto.getPlaceId())
-                    .orElseThrow(() -> new GeneralException(ErrorCode.NOT_FOUND));// error대체 필요..
-            eventRepository.save(eventDto.toEntity(place));
+            Optional<Place> place = placeRepository.findById(eventDto.getPlaceId());
+            if (place.isEmpty()) {
+                return false;
+            }
+            eventRepository.save(eventDto.toEntity(place.get()));
             return true;
         } catch (Exception e) {
             throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
@@ -80,10 +82,6 @@ public class EventService {
             if (eventId == null || eventDto == null) {
                 return false;
             }
-            if (!eventId.equals(eventDto.id())) {
-                return false;
-            }
-
             Optional<Event> optionalEvent = eventRepository.findById(eventId);
             if (optionalEvent.isEmpty()) {
                 return false;
