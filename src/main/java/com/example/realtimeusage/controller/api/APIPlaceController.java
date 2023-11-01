@@ -50,6 +50,7 @@ public class APIPlaceController {
                 "010-1234-5678",
                 30,
                 "신장개업",
+                true,
                 null,
                 null)
         );

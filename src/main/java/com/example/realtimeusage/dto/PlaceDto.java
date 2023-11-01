@@ -12,6 +12,7 @@ public record PlaceDto(
         String phoneNumber,
         Integer capacity,
         String memo,
+        Boolean enabled,
         LocalDateTime createdAt,
         LocalDateTime updatedAt
 ) {
@@ -24,10 +25,11 @@ public record PlaceDto(
             String phoneNumber,
             Integer capacity,
             String memo,
+            Boolean enabled,
             LocalDateTime createdAt,
             LocalDateTime updatedAt
-            ) {
-        return new PlaceDto(id, type, name, address, phoneNumber, capacity, memo, createdAt, updatedAt);
+    ) {
+        return new PlaceDto(id, type, name, address, phoneNumber, capacity, memo, enabled, createdAt, updatedAt);
     }
 
     //place -> PlaceDto -> placeResponse
@@ -40,6 +42,7 @@ public record PlaceDto(
                 place.getPhoneNumber(),
                 place.getCapacity(),
                 place.getMemo(),
+                place.isEnabled(),
                 place.getCreatedAt(),
                 place.getUpdatedAt()
         );
@@ -53,6 +56,7 @@ public record PlaceDto(
                 .address(address)
                 .phoneNumber(phoneNumber)
                 .capacity(capacity)
+                .enabled(enabled)
                 .memo(memo)
                 .build();
     }

@@ -52,6 +52,7 @@ public class APIEventController {
                         "010-1111-2222",
                         0,
                         null,
+                        true,
                         LocalDateTime.now(),
                         LocalDateTime.now()
                 ),
