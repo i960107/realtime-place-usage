@@ -130,6 +130,7 @@ class APIEventControllerTest {
     void requestCreatingEventShouldCreateEventAndReturnStandardSuccessfulResponse() throws Exception {
         //given
         EventRequest requestDto = EventRequest.of(
+                1L,
                 "오후 운동",
                 LocalDateTime.of(2021, 1, 1, 13, 0, 0),
                 LocalDateTime.of(2021, 1, 1, 16, 0, 0),
@@ -157,6 +158,7 @@ class APIEventControllerTest {
     @Test
     void requestCreatingEventWithInvalidBodyShouldReturnStandardErrorResponse() throws Exception {
         EventRequest requestDto = EventRequest.of(
+                1L,
                 "오",
                 null,
                 null,

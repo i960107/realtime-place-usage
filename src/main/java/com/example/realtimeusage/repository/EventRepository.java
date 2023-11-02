@@ -1,10 +1,13 @@
 package com.example.realtimeusage.repository;
 
 import com.example.realtimeusage.domain.Event;
+import com.example.realtimeusage.domain.Place;
 import com.example.realtimeusage.domain.QEvent;
 import com.querydsl.core.types.dsl.ComparableExpression;
 import com.querydsl.core.types.dsl.SimpleExpression;
 import com.querydsl.core.types.dsl.StringExpression;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.data.querydsl.binding.QuerydslBinderCustomizer;
@@ -26,4 +29,6 @@ public interface EventRepository extends
         bindings.bind(root.startDateTime).first(ComparableExpression::goe);
         bindings.bind(root.endDateTime).first(ComparableExpression::loe);
     }
+
+    Page<Event> findByPlace(Place place, Pageable pageable);
 }

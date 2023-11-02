@@ -50,10 +50,11 @@ public class PlaceService {
     }
 
     public boolean modifyPlace(Long placeId, PlaceDto placeDto) {
+        // TODO: 2023/11/02 BAD REQUEST VS NOTFOUND 구분해주는게 좋지 않을ㅓ까 
+        if (placeId == null || placeDto == null) {
+            return false;
+        }
         try {
-            if (placeId == null || placeDto == null) {
-                return false;
-            }
             Optional<Place> optionalPlace = placeRepository.findById(placeId);
             if (optionalPlace.isEmpty()) {
                 return false;
@@ -81,6 +82,21 @@ public class PlaceService {
             place.delete();
             placeRepository.save(place);
             return true;
+        } catch (Exception exception) {
+            throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, exception);
+        }
+    }
+
+    public boolean upsertPlace(PlaceDto dto) {
+        try {
+            if (dto == null) {
+                return false;
+            }
+            if (dto.id() != null) {
+                return createPlace(dto);
+            } else {
+                return modifyPlace(dto.id(), dto);
+            }
         } catch (Exception exception) {
             throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, exception);
         }

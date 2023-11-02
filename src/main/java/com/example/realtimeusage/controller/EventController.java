@@ -26,7 +26,7 @@ public class EventController {
     @GetMapping
     public String events(Model model, @QuerydslPredicate(root = Event.class) Predicate predicate) {
         model.addAttribute("events", eventService.getEvents(predicate)
-                .stream().map(EventResponse::from)
+                .stream().map(EventResponse::of)
                 .collect(Collectors.toList())
         );
         return "/event/index";
@@ -36,7 +36,7 @@ public class EventController {
     public String eventDetail(
             @Positive @NotNull @PathVariable Long eventId,
             Model model) {
-        model.addAttribute("event", eventService.getEvent(eventId).map(EventResponse::from));
+        model.addAttribute("event", eventService.getEvent(eventId).map(EventResponse::of));
         return "/event/detail";
     }
 }
