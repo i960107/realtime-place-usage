@@ -19,4 +19,14 @@ public record PlaceResponse(
             String memo) {
         return new PlaceResponse(name, type, address, phoneNumber, capacity, memo);
     }
+    public static PlaceResponse of(PlaceDto placeDto){
+        return new PlaceResponse(
+                placeDto.name(),
+                placeDto.type(),
+                placeDto.address(),
+                placeDto.phoneNumber(),
+                placeDto.capacity(),
+                placeDto.memo()
+        );
+    }
 }

@@ -18,7 +18,7 @@ public class BaseExceptionHandler {
         model.addAttribute("statusCode", status.value());
         model.addAttribute("errorCode", errorCode);
         model.addAttribute("message", errorCode.getMessage(e));
-        return "error";
+        return "/error";
     }
 
     @ExceptionHandler
@@ -29,7 +29,7 @@ public class BaseExceptionHandler {
         model.addAttribute("statusCode", status.value());
         model.addAttribute("errorCode", errorCode);
         model.addAttribute("message", errorCode.getMessage(e));
-        return "error";
+        return "/error";
     }
 
 }

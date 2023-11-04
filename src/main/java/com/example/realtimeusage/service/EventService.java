@@ -14,6 +14,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.StreamSupport;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -120,4 +123,33 @@ public class EventService {
         }
     }
 
+    @Transactional(readOnly = true)
+    public Page<EventDto> getEvents(Long placeId, Pageable pageable) {
+        try {
+            Place place = placeRepository.getById(placeId);
+            Page<Event> events = eventRepository.findByPlace(place, pageable);
+            return new PageImpl<>(
+                    events.getContent().stream().map(EventDto::of).toList(),
+                    events.getPageable(),
+                    events.getTotalElements()
+            );
+        } catch (Exception e) {
+            throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
+        }
+    }
+
+    public boolean upsertEvent(EventDto dto) {
+        try {
+            if (dto == null) {
+                return false;
+            }
+            if (dto.id() == null) {
+                return createEvent(dto);
+            } else {
+                return modifyEvent(dto.id(), dto);
+            }
+        } catch (Exception exception) {
+            throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, exception);
+        }
+    }
 }

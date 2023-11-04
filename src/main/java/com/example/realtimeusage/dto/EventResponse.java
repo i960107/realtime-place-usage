@@ -37,7 +37,7 @@ public record EventResponse(
                 memo);
     }
 
-    public static EventResponse from(EventDto eventDto) {
+    public static EventResponse of(EventDto eventDto) {
         if (eventDto == null) {
             return null; //NPE 방지
         }
@@ -55,4 +55,16 @@ public record EventResponse(
     }
 
 
+    public static EventResponse empty(PlaceDto placeDto) {
+        return new EventResponse(
+                null,
+                placeDto,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null);
+    }
 }

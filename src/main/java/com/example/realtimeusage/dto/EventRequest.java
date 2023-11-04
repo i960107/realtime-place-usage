@@ -2,22 +2,23 @@ package com.example.realtimeusage.dto;
 
 import com.example.realtimeusage.constant.EventStatus;
 import java.time.LocalDateTime;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotBlank.List;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.DateTimeFormat.ISO;
 
 public record EventRequest(
-        @NotBlank String name,
-        @NotNull  LocalDateTime startDateTime,
-        @NotNull  LocalDateTime endDateTime,
-        @NotNull @Positive Integer capacity,
-        @NotNull @PositiveOrZero Integer currentNumberOfPeople,
-        @NotNull EventStatus status,
+        @Positive Long id,
+        String name,
+        @DateTimeFormat(iso = ISO.DATE_TIME) LocalDateTime startDateTime,
+        @DateTimeFormat(iso = ISO.DATE_TIME) LocalDateTime endDateTime,
+        @Positive Integer capacity,
+        @PositiveOrZero Integer currentNumberOfPeople,
+        EventStatus status,
         String memo
 ) {
     public static EventRequest of(
+            Long id,
             String name,
             LocalDateTime startDateTime,
             LocalDateTime endDateTime,
@@ -26,6 +27,7 @@ public record EventRequest(
             EventStatus status,
             String memo) {
         return new EventRequest(
+                id,
                 name,
                 startDateTime,
                 endDateTime,
@@ -38,7 +40,7 @@ public record EventRequest(
 
     public EventDto toDto(PlaceDto placeDto) {
         return EventDto.of(
-                null,
+                id,
                 placeDto,
                 name,
                 startDateTime,
