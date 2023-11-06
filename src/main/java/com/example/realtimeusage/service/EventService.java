@@ -5,6 +5,7 @@ import com.example.realtimeusage.constant.EventStatus;
 import com.example.realtimeusage.domain.Event;
 import com.example.realtimeusage.domain.Place;
 import com.example.realtimeusage.dto.EventDto;
+import com.example.realtimeusage.dto.EventViewResponse;
 import com.example.realtimeusage.exception.GeneralException;
 import com.example.realtimeusage.repository.EventRepository;
 import com.example.realtimeusage.repository.PlaceRepository;
@@ -38,21 +39,6 @@ public class EventService {
         }
     }
 
-    //테스트 용 임시 함수
-    public List<EventDto> getEvents(
-            Long placeId,
-            String name,
-            EventStatus eventStatus,
-            LocalDateTime startDateTime,
-            LocalDateTime endDateTime
-    ) {
-        try {
-            return null;
-        } catch (Exception e) {
-            throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
-        }
-    }
-
     @Transactional(readOnly = true)
     public Optional<EventDto> getEvent(long eventId) {
         try {
@@ -67,12 +53,10 @@ public class EventService {
             if (eventDto == null) {
                 return false;
             }
-            // TODO: 2023/11/01
-            Optional<Place> place = placeRepository.findById(eventDto.getPlaceId());
-            if (place.isEmpty()) {
-                return false;
-            }
-            eventRepository.save(eventDto.toEntity(place.get()));
+            Place place = placeRepository.getById(eventDto.getPlaceId());
+            //placeId가 유효하지 않으면 EntityNotFoundException 발생.
+            //cascade = None. 만약, cascde = CREATE면 place 생성됨.. ?
+            eventRepository.save(eventDto.toEntity(place));
             return true;
         } catch (Exception e) {
             throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
@@ -92,13 +76,7 @@ public class EventService {
             Event event = optionalEvent.get();
             event.update(eventDto);
 
-            if (eventDto.getPlaceId() != null) {
-                Optional<Place> place = placeRepository.findById(eventDto.getPlaceId());
-                if (place.isEmpty()) {
-                    return false;
-                }
-                event.updatePlace(place.get());
-            }
+            //place는 수정할 수 없도록 정책 수정
             eventRepository.save(event);
             return true;
         } catch (
@@ -112,9 +90,11 @@ public class EventService {
             if (eventId == null) {
                 return false;
             }
-            Optional<Event> event = eventRepository.findById(eventId);
-            if (event.isPresent()) {
-                event.get().updateStatus(EventStatus.DELETED);
+            Optional<Event> optionalEvent = eventRepository.findById(eventId);
+            if (optionalEvent.isPresent()) {
+                Event event = optionalEvent.get();
+                event.updateStatus(EventStatus.DELETED);
+                eventRepository.save(event);
                 return true;
             }
             return false;
@@ -151,5 +131,24 @@ public class EventService {
         } catch (Exception exception) {
             throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, exception);
         }
+    }
+
+    @Transactional(readOnly = true)
+    public Page<EventViewResponse> getEventViewResponse(
+            String placeName,
+            String eventName,
+            EventStatus eventStatus,
+            LocalDateTime startDateTime,
+            LocalDateTime endDateTime,
+            Pageable pageable
+    ) {
+        return eventRepository.findEventViewPageBySearchParam(
+                placeName,
+                eventName,
+                eventStatus,
+                startDateTime,
+                endDateTime,
+                pageable
+        );
     }
 }

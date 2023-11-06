@@ -2,7 +2,6 @@ package com.example.realtimeusage.exception;
 
 import com.example.realtimeusage.constant.ErrorCode;
 import lombok.Getter;
-import lombok.ToString;
 
 @Getter
 public class GeneralException extends RuntimeException {
@@ -33,6 +32,17 @@ public class GeneralException extends RuntimeException {
         super(errorCode.getMessage());
         this.errorCode = errorCode;
     }
+
+    public GeneralException(ErrorCode errorCode, String message) {
+        super(errorCode.getMessage(message));
+        this.errorCode = errorCode;
+    }
+
+    public GeneralException(ErrorCode errorCode, String message, Throwable cause) {
+        super(errorCode.getMessage(message), cause);
+        this.errorCode = errorCode;
+    }
+
     public GeneralException(ErrorCode errorCode, Throwable cause) {
         super(errorCode.getMessage(cause), cause);
         this.errorCode = errorCode;
