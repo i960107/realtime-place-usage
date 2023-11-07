@@ -51,6 +51,7 @@ public record PlaceDto(
     //save or update
     public Place toEntity() {
         return Place.builder()
+                .id(id)
                 .type(type)
                 .name(name)
                 .address(address)

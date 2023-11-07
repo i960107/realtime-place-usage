@@ -36,7 +36,8 @@ public class Place extends BaseEntity {
     private boolean enabled;
 
     @Builder
-    public Place(String name, PlaceType type, String address, String phoneNumber, int capacity, String memo, boolean enabled) {
+    public Place(Long id, String name, PlaceType type, String address, String phoneNumber, int capacity, String memo, boolean enabled) {
+        this.id = id;
         this.name = name;
         this.type = type;
         this.address = address;
