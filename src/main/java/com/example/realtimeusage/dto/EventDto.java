@@ -64,6 +64,7 @@ public record EventDto(
 
     public Event toEntity(Place place) {
         return Event.builder()
+                .id(id)
                 .name(name)
                 .place(place)
                 .startDateTime(startDateTime)

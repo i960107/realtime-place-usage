@@ -44,8 +44,9 @@ public class Event extends BaseEntity {
     private String memo;
 
     @Builder
-    public Event(Place place, String name, LocalDateTime startDateTime, LocalDateTime endDateTime,
+    public Event(Long id, Place place, String name, LocalDateTime startDateTime, LocalDateTime endDateTime,
                  int capacity, int currentNumberOfPeople, EventStatus status, String memo) {
+        this.id = id;
         this.place = place;
         this.name = name;
         this.startDateTime = startDateTime;
@@ -79,10 +80,6 @@ public class Event extends BaseEntity {
         if (eventDto.memo() != null) {
             this.memo = eventDto.memo();
         }
-    }
-
-    public void updatePlace(Place place) {
-        this.place = place;
     }
 
     public void updateStatus(EventStatus status) {
