@@ -1,5 +1,7 @@
 package com.example.realtimeusage.domain;
 
+import java.util.Collection;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -7,8 +9,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
 @NoArgsConstructor
@@ -33,4 +39,13 @@ public class Admin extends BaseEntity {
         this.phoneNumber = phoneNumber;
         this.memo = memo;
     }
+
+    public UserDetails toUserDetails(){
+        return User.builder()
+                .username(email)
+                .password(password)
+                .authorities(List.of())
+                .build();
+    }
+
 }
