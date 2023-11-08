@@ -3,6 +3,7 @@ package com.example.realtimeusage.controller.error;
 import com.example.realtimeusage.constant.ErrorCode;
 import com.example.realtimeusage.exception.GeneralException;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -11,22 +12,31 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class BaseExceptionHandler {
     @ExceptionHandler(GeneralException.class)
-    public String error(GeneralException e, Model model, HttpServletResponse response) {
+    public String generalError(GeneralException e, Model model) {
         ErrorCode errorCode = e.getErrorCode();
-        HttpStatus status = errorCode.isClientSideError() ? HttpStatus.BAD_REQUEST : HttpStatus.INTERNAL_SERVER_ERROR;
 
-        model.addAttribute("statusCode", status.value());
+        model.addAttribute("statusCode", errorCode.getHttpStatus());
         model.addAttribute("errorCode", errorCode);
         model.addAttribute("message", errorCode.getMessage(e));
         return "/error";
     }
 
-    @ExceptionHandler
-    public String error(Exception e, Model model) {
-        ErrorCode errorCode = ErrorCode.INTERNAL_ERROR;
-        HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+    @ExceptionHandler({ConstraintViolationException.class})
+    public String constraintViolationError(Exception ex, Model model) {
+        ErrorCode errorCode = ErrorCode.BAD_REQUEST;
 
-        model.addAttribute("statusCode", status.value());
+        model.addAttribute("statusCode", errorCode.getHttpStatus());
+        model.addAttribute("errorCode", errorCode);
+        model.addAttribute("message", errorCode.getMessage(ex));
+        return "/error";
+    }
+
+    @ExceptionHandler
+    public String error(Exception e, HttpServletResponse response, Model model) {
+        HttpStatus httpStatus = HttpStatus.valueOf(response.getStatus());
+        ErrorCode errorCode = ErrorCode.valueOf(httpStatus);
+
+        model.addAttribute("statusCode", httpStatus.value());
         model.addAttribute("errorCode", errorCode);
         model.addAttribute("message", errorCode.getMessage(e));
         return "/error";

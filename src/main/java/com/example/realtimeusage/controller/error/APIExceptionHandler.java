@@ -7,7 +7,6 @@ import javax.validation.ConstraintViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -20,54 +19,37 @@ public class APIExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(GeneralException.class)
     public ResponseEntity<Object> generalError(GeneralException ex, WebRequest request) {
         ErrorCode errorCode = ex.getErrorCode();
-        HttpStatus status = errorCode.isClientSideError() ? HttpStatus.BAD_REQUEST : HttpStatus.INTERNAL_SERVER_ERROR;
-
-        return getObjectResponseEntity(ex, request, errorCode, status, HttpHeaders.EMPTY);
+        return handleExceptionInternal(ex, errorCode, request);
     }
 
     @ExceptionHandler
     public ResponseEntity<Object> error(Exception ex, WebRequest request) {
-        return getObjectResponseEntity(
-                ex,
-                request,
-                ErrorCode.INTERNAL_ERROR,
-                HttpStatus.INTERNAL_SERVER_ERROR,
-                HttpHeaders.EMPTY);
-    }
-
-    @Override
-    protected ResponseEntity<Object> handleExceptionInternal(Exception ex,
-                                                             Object body,
-                                                             HttpHeaders headers,
-                                                             HttpStatus status,
-                                                             WebRequest request) {
-        ErrorCode errorCode =
-                status.is4xxClientError() ?
-                        ErrorCode.SPRING_BAD_REQUEST :
-                        ErrorCode.SPRING_INTERNAL_ERROR;
-        return getObjectResponseEntity(ex, request, errorCode, status, headers);
+        return handleExceptionInternal(ex, ErrorCode.INTERNAL_ERROR, request);
     }
 
     @ExceptionHandler({ConstraintViolationException.class})
     public ResponseEntity<Object> validationError(Exception ex, WebRequest request) {
-        return getObjectResponseEntity(
-                ex,
-                request,
-                ErrorCode.VALIDATION_ERROR,
-                HttpStatus.BAD_REQUEST,
-                HttpHeaders.EMPTY);
+        return handleExceptionInternal(ex, ErrorCode.VALIDATION_ERROR, request);
     }
 
-    private ResponseEntity<Object> getObjectResponseEntity(Exception e,
-                                                           WebRequest request,
-                                                           ErrorCode errorCode,
-                                                           HttpStatus status,
-                                                           HttpHeaders headers) {
-        return super.handleExceptionInternal(e,
-                APIErrorResponse.of(errorCode.getCode(), errorCode.getMessage(e)),
+    @Override
+    protected ResponseEntity<Object> handleExceptionInternal(Exception ex, Object body, HttpHeaders headers,
+                                                             HttpStatus status, WebRequest request) {
+        // TODO: 2023/11/09 stack overflow에러 발생하는데.. 
+        return handleExceptionInternal(ex, ErrorCode.valueOf(status), headers, status, request);
+    }
+
+    private ResponseEntity<Object> handleExceptionInternal(Exception e, ErrorCode errorCode, WebRequest webRequest) {
+        return handleExceptionInternal(e, errorCode, HttpHeaders.EMPTY, errorCode.getHttpStatus(), webRequest);
+    }
+
+    private ResponseEntity<Object> handleExceptionInternal(Exception e, ErrorCode errorCode, HttpHeaders headers,
+                                                           HttpStatus status, WebRequest request) {
+        return super.handleExceptionInternal(
+                e,
+                APIErrorResponse.of(errorCode, e),
                 headers,
                 status,
                 request);
     }
-
 }

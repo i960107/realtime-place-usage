@@ -1,28 +1,31 @@
 package com.example.realtimeusage.constant;
 
+import com.example.realtimeusage.exception.GeneralException;
+import java.util.Arrays;
 import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 
 @Getter
 @RequiredArgsConstructor
 public enum ErrorCode {
-    OK(0, ErrorCategory.NORMAL, "OK"), //보통 error코드에 ok상태도 들어감
+    OK(0, HttpStatus.OK, "OK"), //보통 error코드에 ok상태도 들어감
 
-    BAD_REQUEST(10000, ErrorCategory.CLIENT_SIDE, "bad request"),
-    SPRING_BAD_REQUEST(10001, ErrorCategory.CLIENT_SIDE, "Spring-detected bad request"),
-    VALIDATION_ERROR(10002, ErrorCategory.CLIENT_SIDE, "validation failed"),
-    NOT_FOUND(10003, ErrorCategory.CLIENT_SIDE, "resource not found"),
+    BAD_REQUEST(10000, HttpStatus.BAD_REQUEST, "bad request"),
+    SPRING_BAD_REQUEST(10001, HttpStatus.BAD_REQUEST, "Spring-detected bad request"),
+    VALIDATION_ERROR(10002, HttpStatus.BAD_REQUEST, "validation failed"),
+    NOT_FOUND(10003, HttpStatus.NOT_FOUND, "resource not found"),
 
-    INTERNAL_ERROR(20000, ErrorCategory.SERVER_SIDE, "internal error"),
-    SPRING_INTERNAL_ERROR(20001, ErrorCategory.SERVER_SIDE, "Spring-detected internal error"),
-    DATA_ACCESS_ERROR(20002, ErrorCategory.SERVER_SIDE, "requested resource is not found");
+    INTERNAL_ERROR(20000, HttpStatus.INTERNAL_SERVER_ERROR, "internal error"),
+    SPRING_INTERNAL_ERROR(20001, HttpStatus.INTERNAL_SERVER_ERROR, "Spring-detected internal error"),
+    DATA_ACCESS_ERROR(20002, HttpStatus.INTERNAL_SERVER_ERROR, "requested resource is not found");
 
     private final Integer code;
-    private final ErrorCategory errorCategory;
+    private final HttpStatus httpStatus;
     private final String message;
 
     public String getMessage(Throwable e) {
@@ -42,22 +45,27 @@ public enum ErrorCode {
                 .collect(Collectors.joining());
     }
 
+    public static ErrorCode valueOf(HttpStatus httpStatus) {
+        if (httpStatus == null) {
+            throw new GeneralException("HttpStatus is null");
+        }
 
-    public boolean isClientSideError() {
-//        return this.getErrorCategory() == ErrorCategory.CLIENT_SIDE;
-        return this.getErrorCategory().equals(ErrorCategory.CLIENT_SIDE);
-    }
-
-    public boolean isServerSideError() {
-        return this.getErrorCategory().equals(ErrorCategory.SERVER_SIDE);
+        return Arrays.stream(values())
+                .filter(errorCode -> errorCode.httpStatus.equals(httpStatus))
+                .findFirst()
+                .orElseGet(() -> {
+                    if (httpStatus.is4xxClientError()) {
+                        return ErrorCode.BAD_REQUEST;
+                    } else if (httpStatus.is5xxServerError()) {
+                        return ErrorCode.INTERNAL_ERROR;
+                    } else {
+                        return ErrorCode.OK;
+                    }
+                });
     }
 
     @Override
     public String toString() {
         return String.format("%s (%d) : %s", name(), this.getCode(), this.getMessage());
-    }
-
-    public enum ErrorCategory {
-        NORMAL, CLIENT_SIDE, SERVER_SIDE;
     }
 }
