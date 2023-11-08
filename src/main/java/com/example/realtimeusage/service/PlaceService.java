@@ -42,6 +42,9 @@ public class PlaceService {
 
     public boolean createPlace(PlaceDto placeDto) {
         try {
+            if(placeDto == null){
+                return false;
+            }
             placeRepository.save(placeDto.toEntity());
             return true;
         } catch (Exception exception) {
@@ -93,9 +96,9 @@ public class PlaceService {
                 return false;
             }
             if (dto.id() != null) {
-                return createPlace(dto);
-            } else {
                 return modifyPlace(dto.id(), dto);
+            } else {
+                return createPlace(dto);
             }
         } catch (Exception exception) {
             throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, exception);
