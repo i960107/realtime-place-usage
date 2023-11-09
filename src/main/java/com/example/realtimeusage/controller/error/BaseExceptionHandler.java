@@ -15,7 +15,7 @@ public class BaseExceptionHandler {
     public String generalError(GeneralException e, Model model) {
         ErrorCode errorCode = e.getErrorCode();
 
-        model.addAttribute("statusCode", errorCode.getHttpStatus());
+        model.addAttribute("statusCode", errorCode.getHttpStatus().value());
         model.addAttribute("errorCode", errorCode);
         model.addAttribute("message", errorCode.getMessage(e));
         return "/error";
@@ -25,7 +25,7 @@ public class BaseExceptionHandler {
     public String constraintViolationError(Exception ex, Model model) {
         ErrorCode errorCode = ErrorCode.BAD_REQUEST;
 
-        model.addAttribute("statusCode", errorCode.getHttpStatus());
+        model.addAttribute("statusCode", errorCode.getHttpStatus().value());
         model.addAttribute("errorCode", errorCode);
         model.addAttribute("message", errorCode.getMessage(ex));
         return "/error";
