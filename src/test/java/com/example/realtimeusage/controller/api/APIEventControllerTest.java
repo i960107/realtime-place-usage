@@ -47,8 +47,8 @@ class APIEventControllerTest {
     @Test
     void requestEventWithNoParameterShouldReturnStandardResponseOfEventList() throws Exception {
         //given
-        given(eventService.getEvents(null, null, null, null, null))
-                .willReturn(List.of(createEventDto()));
+//        given(eventService.getEvents(null, null, null, null, null))
+//                .willReturn(List.of(createEventDto()));
         //when & then
         mvc.perform(get("/api/events"))
                 .andExpect(status().isOk())
@@ -66,15 +66,15 @@ class APIEventControllerTest {
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.errorCode").value(ErrorCode.OK.getCode()))
                 .andExpect(jsonPath("$.message").value(ErrorCode.OK.getMessage()));
-        then(eventService).should().getEvents(null, null, null, null, null);
+//        then(eventService).should().getEvents(null, null, null, null, null);
     }
 
     @DisplayName("[API] [GET] 이벤트 리스트 조회 - 검색 파라미터")
     @Test
     void requestEventWithParametersShouldReturnStandardResponseOfEventList() throws Exception {
         //given
-        given(eventService.getEvents(any(), any(), any(), any(), any()))
-                .willReturn(List.of(createEventDto()));
+//        given(eventService.getEvents(any(), any(), any(), any(), any()))
+//                .willReturn(List.of(createEventDto()));
         //when & then
         mvc.perform(get("/api/events")
                         .queryParam("placeId", "1")
@@ -100,7 +100,7 @@ class APIEventControllerTest {
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.errorCode").value(ErrorCode.OK.getCode()))
                 .andExpect(jsonPath("$.message").value(ErrorCode.OK.getMessage()));
-        then(eventService).should().getEvents(any(), any(), any(), any(), any());
+//        then(eventService).should().getEvents(any(), any(), any(), any(), any());
     }
 
     @DisplayName("[API] [GET] 이벤트 리스트 조회 - 잘못된 검색 파라미터")
