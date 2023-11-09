@@ -130,8 +130,8 @@ class AdminControllerTest {
                         .get("/admin/places/" + nonExistingPlaceId))
                 .andExpect(status().isOk())
                 .andExpect(view().name("/error"))
-                .andExpect(model().attribute("errorCode", is(ErrorCode.INTERNAL_ERROR)))
-                .andExpect(model().attribute("statusCode", HttpStatus.INTERNAL_SERVER_ERROR.value()))
+                .andExpect(model().attribute("errorCode", is(ErrorCode.BAD_REQUEST)))
+                .andExpect(model().attribute("statusCode", HttpStatus.BAD_REQUEST.value()))
                 .andExpect(model().attribute("message", containsString("placeId")));
         //then
         then(placeService).shouldHaveNoInteractions();
@@ -309,7 +309,7 @@ class AdminControllerTest {
         mockMvc.perform(get("/admin/places/" + nonExistingPlaceId + "/newEvent"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("/error"))
-                .andExpect(model().attribute("statusCode", HttpStatus.BAD_REQUEST.value()))
+                .andExpect(model().attribute("statusCode", HttpStatus.NOT_FOUND.value()))
                 .andExpect(model().attribute("errorCode", ErrorCode.NOT_FOUND))
                 .andExpect(model().attribute("message", containsString(ErrorCode.NOT_FOUND.getMessage())));
 
