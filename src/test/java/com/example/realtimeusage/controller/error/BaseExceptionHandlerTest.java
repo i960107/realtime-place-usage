@@ -41,7 +41,7 @@ class BaseExceptionHandlerTest {
         //then
         assertThat(viewName).isEqualTo("/error");
         assertThat(model)
-                .hasFieldOrPropertyWithValue("statusCode", errorCode.getHttpStatus())
+                .hasFieldOrPropertyWithValue("statusCode", errorCode.getHttpStatus().value())
                 .hasFieldOrPropertyWithValue("errorCode", errorCode)
                 .hasFieldOrPropertyWithValue("message", errorCode.getMessage(e));
     }
@@ -59,7 +59,7 @@ class BaseExceptionHandlerTest {
         //then
         assertThat(viewName).isEqualTo("/error");
         assertThat(model)
-                .hasFieldOrPropertyWithValue("statusCode", errorCode.getHttpStatus())
+                .hasFieldOrPropertyWithValue("statusCode", errorCode.getHttpStatus().value())
                 .hasFieldOrPropertyWithValue("errorCode", errorCode)
                 .hasFieldOrPropertyWithValue("message", errorCode.getMessage(e));
     }
