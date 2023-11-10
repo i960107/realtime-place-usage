@@ -4,9 +4,9 @@
     <attr sel="#eventTable" th:object="${event}">
         <attr sel="#placeId" th:text="*{placeId} ?: _" />
         <attr sel="#eventName" th:text="*{eventName} ?: _" />
-        <attr sel="#eventStatus" th:text="*{eventStatus} ?: _" />
-        <attr sel="#eventStartDatetime" th:text="*{eventStartDatetime} ?: _" />
-        <attr sel="#eventEndDatetime" th:text="*{eventEndDatetime} ?: _" />
+        <attr sel="#eventStatus" th:text="*{status} ?: _" />
+        <attr sel="#eventStartDatetime" th:text="*{startDateTime} ?: _" />
+        <attr sel="#eventEndDatetime" th:text="*{endDateTime} ?: _" />
         <attr sel="#currentNumberOfPeople" th:text="*{currentNumberOfPeople} ?: _" />
         <attr sel="#capacity" th:text="*{capacity} ?: _" />
         <attr sel="#memo" th:text="*{memo} ?: _" />

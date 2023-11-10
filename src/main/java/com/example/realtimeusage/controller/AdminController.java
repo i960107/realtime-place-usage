@@ -55,6 +55,7 @@ public class AdminController {
     public String adminPlaces(@QuerydslPredicate(root = Place.class) Predicate predicate, Model model) {
         List<PlaceResponse> places = placeService.getPlaces(predicate)
                 .stream()
+                .filter(PlaceDto::enabled)
                 .map(PlaceResponse::of)
                 .toList();
 

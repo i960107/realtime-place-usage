@@ -2,8 +2,8 @@
 <thlogic>
   <attr sel="#placeTitle" th:text="'장소 상세'" />
   <attr sel="#placeTable" th:object="${place}">
-    <attr sel="#placeType" th:text="*{placeType} ?: _" />
-    <attr sel="#placeName" th:text="*{placeName} ?: _" />
+    <attr sel="#placeType" th:text="*{type} ?: _" />
+    <attr sel="#placeName" th:text="*{name} ?: _" />
     <attr sel="#address" th:text="*{address} ?: _" />
     <attr sel="#phoneNumber" th:text="*{phoneNumber} ?: _" />
     <attr sel="#capacity" th:text="*{capacity} ?: _" />

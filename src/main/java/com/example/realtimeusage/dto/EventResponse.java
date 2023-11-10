@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 public record EventResponse(
         Long eventId,
         PlaceDto placeDto,
-        String name,
+        String eventName,
         LocalDateTime startDateTime,
         LocalDateTime endDateTime,
         Integer capacity,
@@ -66,5 +66,13 @@ public record EventResponse(
                 null,
                 null,
                 null);
+    }
+
+    public String getPlaceName() {
+        return placeDto.name();
+    }
+
+    public Long getPlaceId() {
+        return placeDto.id();
     }
 }

@@ -3,11 +3,11 @@
     <attr sel="#logout" th:text="'로그아웃'" th:href="@{/logout}"/>
     <attr sel="#placeTitle" th:text="'장소 상세 - 관리자 (' + ${adminOperationStatus.message} + ')'"/>
     <attr sel="#placeTable">
-        <attr sel="#placeType" th:remove="all-but-first">
+        <attr sel="#type" th:remove="all-but-first">
             <attr sel="option" th:each="type : ${placeTypeOption}" th:value="${type}" th:text="${type}"
-                  th:selected="${place?.placeType == type}"/>
+                  th:selected="${place?.type == type}"/>
         </attr>
-        <attr sel="#placeName" th:value="${place?.placeName}"/>
+        <attr sel="#name" th:value="${place?.name}"/>
         <attr sel="#address" th:value="${place?.address}"/>
         <attr sel="#phoneNumber" th:value="${place?.phoneNumber}" th:pattern="'[0-9]{2,4}-[0-9]{3,4}-[0-9]{4}'"
               th:title="'전화번호 형식을 맞춰주세요 (ex: 000-0000-0000)'"/>
@@ -17,8 +17,9 @@
     <attr sel="#placeId" th:value="${place?.id}"/>
     <attr sel="#csrf" th:value="${_csrf.token}" th:name="${_csrf.parameterName}"/>
     <attr sel="#savePlace" th:form="placeForm" th:formaction="@{/admin/places}" th:formmethod="post"/>
-    <attr sel="#removePlace" th:if="{place}!=null" th:form="removePlaceForm"
-          th:action="@{/admin/places/{placeId}(id=${place?.id})}" th:formmethod="delete"/>
+    <attr sel="#removePlace" th:form="removePlaceForm"/>
+    <attr sel="#removePlaceForm" th:if="${place}!= null"
+          th:action="@{/admin/places/{placeId}(placeId=${place?.id})}" th:method="delete"/>
     <attr sel="#backToPlaces" th:onclick="'location.href=\'' + @{/admin/places} + '\''"/>
 
     <attr sel="#eventTable" th:if="${place?.id} != null">
@@ -27,7 +28,7 @@
                 <attr sel="td.eventName" th:text="${event.eventName}"/>
                 <attr sel="td.eventStatus" th:text="${event.eventStatus}"/>
                 <attr sel="td.eventDatetime"
-                      th:text="${#temporals.format(event.eventStartDatetime, 'M/d ha', 'US')} + ' ~ ' + ${#temporals.format(event.eventEndDatetime, 'M/d ha', 'US')}"/>
+                      th:text="${#temporals.format(event.startDateTime, 'M/d ha', 'US')} + ' ~ ' + ${#temporals.format(event.endDateTime, 'M/d ha', 'US')}"/>
                 <attr sel="td.people" th:text="${event.currentNumberOfPeople} + '명 / ' + ${event.capacity} + '명'"/>
                 <attr sel="td/a" th:text="'상세'" th:href="@{'/admin/events/' + ${event.id}}"/>
             </attr>

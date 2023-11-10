@@ -154,7 +154,13 @@ class AdminControllerTest {
     @DisplayName("[view][POST] 어드민 페이지 - 장소 생성")
     @Test
     void givenNewPlace_whenRequestingCreatingPlace_thenSavesPlaceAndReturnsToListPage() throws Exception {
-        PlaceRequest newPlace = PlaceRequest.of(null, "테스트 장소", "테스트 주소", "02-111-1111", PlaceType.PARTY, true, 30,
+        PlaceRequest newPlace = PlaceRequest.of(
+                null,
+                "테스트 장소",
+                "테스트 주소",
+                "02-111-1111",
+                PlaceType.PARTY,
+                30,
                 null);
 
         given(placeService.upsertPlace(any())).willReturn(true);
@@ -180,8 +186,13 @@ class AdminControllerTest {
     @Test
     void givenUpdatedPlace_whenRequestingCreatingPlace_thenModifiesPlaceAndReturnsToListPage() throws Exception {
         Long placeId = 1L;
-        PlaceRequest updatedPlace = PlaceRequest.of(placeId, "new 테스트 장소", "테스트 주소", "02-111-1111", PlaceType.PARTY,
-                true, 30,
+        PlaceRequest updatedPlace = PlaceRequest.of(
+                placeId,
+                "new 테스트 장소",
+                "테스트 주소",
+                "02-111-1111",
+                PlaceType.PARTY,
+                30,
                 null);
 
         given(placeService.upsertPlace(updatedPlace.toDto())).willReturn(true);
@@ -192,7 +203,9 @@ class AdminControllerTest {
                                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                                 .content(objectToFormData(updatedPlace)))
                 .andExpect(status().isSeeOther())
+                //controller에서 반환된 뷰 이름을 체크
                 .andExpect(view().name("redirect:/admin/confirm"))
+                //redirecte된 url을 체크
                 .andExpect(redirectedUrl("/admin/confirm"))
                 .andExpect(flash().attribute("redirectUrl", "/admin/places"))
                 .andExpect(flash().attribute("adminOperationStatus", AdminOperationStatus.MODIFY))

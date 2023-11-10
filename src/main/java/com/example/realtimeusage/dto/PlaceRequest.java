@@ -13,7 +13,6 @@ public record PlaceRequest(
         @NotBlank String address,
         @NotBlank String phoneNumber,
         @NotNull PlaceType type,
-        @NotNull Boolean enabled,
         @NotNull @PositiveOrZero Integer capacity,
         String memo
 ) {
@@ -23,13 +22,12 @@ public record PlaceRequest(
             String address,
             String phoneNumber,
             PlaceType type,
-            Boolean enabled,
             Integer capacity,
             String memo) {
-        return new PlaceRequest(id, name, address, phoneNumber, type, enabled, capacity, memo);
+        return new PlaceRequest(id, name, address, phoneNumber, type, capacity, memo);
     }
 
     public PlaceDto toDto() {
-        return PlaceDto.of(id, type, name, address, phoneNumber, capacity, memo, enabled, null, null);
+        return PlaceDto.of(id, type, name, address, phoneNumber, capacity, memo, true, null, null);
     }
 }
