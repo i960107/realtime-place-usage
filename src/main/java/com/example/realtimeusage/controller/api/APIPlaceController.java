@@ -22,6 +22,7 @@ public class APIPlaceController {
     public APIDataResponse<List<PlaceResponse>> getPlaces() {
         return APIDataResponse.of(List.of(
                 PlaceResponse.of(
+                        1L,
                         "배드민턴장",
                         PlaceType.COMMON,
                         "서울시 강남구",
