@@ -21,17 +21,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             PasswordEncoder passwordEncoder,
             AdminService adminService
     ) throws Exception {
-        auth.userDetailsService(adminService);
+        auth.userDetailsService(adminService)
+                .passwordEncoder(passwordEncoder);
     }
+
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests(request -> {
-                    request.antMatchers("/", "/events/**", "/places/**").permitAll()
-                            .anyRequest().authenticated();
+                    // 주로 antMatcher  사용하기.
+                    request.antMatchers("/", "/events/**", "/places/**", "/error", "/actuator/**")
+                            .permitAll()
+                            .anyRequest()
+                            .authenticated();
                 })
                 .formLogin(login -> {
-                    login.permitAll()
+                    login.permitAll() //loginPage, loginProcessingUrl, successfulUrl 다 permitAll
                             .loginPage("/login")
                             .defaultSuccessUrl("/admin/places");
                 })
