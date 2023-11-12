@@ -1,9 +1,10 @@
 package com.example.realtimeusage.controller;
 
-import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 import com.example.realtimeusage.config.SecurityConfig;
 import org.junit.jupiter.api.DisplayName;
@@ -16,27 +17,43 @@ import org.springframework.context.annotation.FilterType;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+@DisplayName("View 컨트롤러 - 인증")
 @WebMvcTest(
-        controllers = BaseController.class,
+        controllers = AuthController.class,
         excludeAutoConfiguration = SecurityAutoConfiguration.class,
-// TODO: 2023/11/12 이게 무슨 의미지.. excludeFilter가 아니라 exclude config해야하는거 아닌가?. enableWebSecurity를 꺼야하는거 아닌가?
         excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = SecurityConfig.class)
 )
-class BaseControllerTest {
-    private final MockMvc mockMvc;
+class AuthControllerTest {
 
-    public BaseControllerTest(@Autowired MockMvc mockMvc) {
-        this.mockMvc = mockMvc;
+    private final MockMvc mvc;
+
+    public AuthControllerTest(@Autowired MockMvc mvc) {
+        this.mvc = mvc;
     }
 
-    @DisplayName("[view] [GET] 기본 페이지 요청")
+    @DisplayName("[view][GET] 로그인 페이지")
     @Test
-    void basePageShouldShowIndexPage() throws Exception {
-        //when & then
-        mockMvc.perform(get("/"))
+    void givenNothing_whenRequestingLoginPage_thenReturnsLoginPage() throws Exception {
+        // Given
+
+        // When & Then
+        mvc.perform(get("/login"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML))
-                .andExpect(content().string(containsString("This is default page")));
+                .andExpect(view().name("auth/login"));
+    }
+
+    @DisplayName("[view][GET] 어드민 회원 가입 페이지")
+    @Test
+    void givenNothing_whenRequestingSignUpPage_thenReturnsSignUpPage() throws Exception {
+        // Given
+
+        // When & Then
+        mvc.perform(get("/sign-up"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML))
+                .andExpect(content().string(containsString("This is sign-up page.")))
+                .andExpect(view().name("auth/sign-up"));
     }
 
 }

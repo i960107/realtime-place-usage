@@ -115,6 +115,25 @@ class EventServiceTest {
         then(eventRepository).should().findAll(any(Predicate.class));
     }
 
+    @DisplayName("placeId로 이벤트를 조회하면, 해당 이벤트 정보를 반환한다.")
+    @Test
+    void givenPlaceId_whenSearchingEvents_thenReturnEventList() {
+        //given
+        Long placeId = 1L;
+        Place place = Place.builder().id(placeId).build();
+        PageRequest pageRequest = PageRequest.ofSize(5);
+        given(placeRepository.getById(placeId))
+                .willReturn(place);
+        given(eventRepository.findByPlace(place, pageRequest))
+                .willReturn(Page.empty());
+        //when
+        Page<EventDto> result = sut.getEvents(placeId, pageRequest);
+        //then
+        assertThat(result).hasSize(0);
+        then(placeRepository).should().getById(placeId);
+        then(eventRepository).should().findByPlace(place, pageRequest);
+    }
+
     @DisplayName("이벤트 뷰 데이터를 검색하면, 페이징된 결과를 출력하여 보여준다.")
     @Test
     void givenNothing_whenSearchingEventViewResponse_thenReturnsEventViewResponsePage() {

@@ -57,7 +57,9 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 @DisplayName("View 컨트롤러 - 어드민")
 @WebMvcTest(
         controllers = AdminController.class,
+        //security 자동설정 끄기
         excludeAutoConfiguration = SecurityAutoConfiguration.class,
+        //
         excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = SecurityConfig.class)
 )
 class AdminControllerTest {
