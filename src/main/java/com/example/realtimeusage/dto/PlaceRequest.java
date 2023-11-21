@@ -6,7 +6,9 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 
-// TODO: 2023/11/02 Request객체를 create, update에 모두 사용하면 validation이 어렵지 않나... 
+// create, update 요청 모두에 사용됨.
+// update(HTTP PUT)시에도 모든 항목 값 채워져서 들어옴
+// -> validation 같은 로직 사용해도 괜찮음.
 public record PlaceRequest(
         @Positive Long id,
         @NotBlank String name,
